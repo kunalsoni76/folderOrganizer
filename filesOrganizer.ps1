@@ -29,7 +29,7 @@ foreach ($folder in $folders) {
 }
 
 # Get all files in the folder
-$files = Get-ChildItem $folderPath
+$files = Get-ChildItem $folderPath -File
 
 # Move files to respective folders
 foreach ($file in $files) {
