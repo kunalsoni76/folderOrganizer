@@ -14,15 +14,17 @@ if (-not (Test-Path $folderPath)) {
     Write-Host "Folder does not exist"
     exit
 }
+else {
+    cd $folderPath
+}
 
-# Create folders for different file types
+# Create folders for different file
 
 $folders = @("Images", "Documents", "Music", "Videos", "Others")
-
 foreach ($folder in $folders) {
-    $folderPath = Join-Path $folderPath $folder
-    if (-not (Test-Path $folderPath)) {
-        New-Item -Path $folderPath -ItemType Directory
+    $tempFolderPath = Join-Path $folderPath $folder
+    if (-not (Test-Path $tempFolderPath)) {
+        New-Item -Path $tempFolderPath -ItemType Directory
     }
 }
 
