@@ -1,6 +1,25 @@
-# Assuming $folderPath is defined earlier in the script
+# This script uses powershell to identify type of files in a folder and move them to respective folders.
 
-# Create folders for different file types if they don't exist
+# Get the path of the folder to organize
+$folderPath = Read-Host "Enter the path of the folder to organize"
+
+# Create lists of extensions for different file types
+$imageExtensions = @(".jpg", ".png", ".gif")
+$documentExtensions = @(".docx", ".pdf", ".txt")
+$musicExtensions = @(".mp3", ".wav", ".flac")
+$videoExtensions = @(".mp4", ".avi", ".mkv")
+
+# Check if the folder exists
+if (-not (Test-Path $folderPath)) {
+    Write-Host "Folder does not exist"
+    exit
+}
+else {
+    cd $folderPath
+}
+
+# Create folders for different file
+
 $folders = @("Images", "Documents", "Music", "Videos", "Others")
 foreach ($folder in $folders) {
     $tempFolderPath = Join-Path $folderPath $folder
@@ -9,32 +28,27 @@ foreach ($folder in $folders) {
     }
 }
 
-# Get all files in the folder, excluding directories
-$files = Get-ChildItem $folderPath -File
+# Get all files in the folder
+$files = Get-ChildItem $folderPath
 
-# Define extensions for each type of file
-$imageExtensions = @(".jpg", ".jpeg", ".png", ".gif")
-$documentExtensions = @(".doc", ".docx", ".pdf", ".txt")
-$musicExtensions = @(".mp3", ".wav")
-$videoExtensions = @(".mp4", ".avi", ".mov")
-
-# Move files to respective folders based on their extension
+# Move files to respective folders
 foreach ($file in $files) {
     $extension = $file.Extension
-    $destinationFolder = ""
-
-    if ($imageExtensions -contains $extension) {
-        $destinationFolder = "Images"
-    } elseif ($documentExtensions -contains $extension) {
-        $destinationFolder = "Documents"
-    } elseif ($musicExtensions -contains $extension) {
-        $destinationFolder = "Music"
-    } elseif ($videoExtensions -contains $extension) {
-        $destinationFolder = "Videos"
-    } else {
-        $destinationFolder = "Others"
+    switch ($extension) {
+       {$extension -in $imageExtensions} {
+            Move-Item -Path $file.FullName -Destination (Join-Path $folderPath "Images")
+        }
+        {$extension -in $documentExtensions} {
+            Move-Item -Path $file.FullName -Destination (Join-Path $folderPath "Documents")
+        }
+        {$extension -in $musicExtensions} {
+            Move-Item -Path $file.FullName -Destination (Join-Path $folderPath "Music")
+        }
+        {$extension -in $videoExtensions} {
+            Move-Item -Path $file.FullName -Destination (Join-Path $folderPath "Videos")
+        }
+        default {
+            Move-Item -Path $file.FullName -Destination (Join-Path $folderPath "Others")
+        }
     }
-
-    $destinationPath = Join-Path $folderPath $destinationFolder
-    Move-Item -Path $file.FullName -Destination $destinationPath
 }
