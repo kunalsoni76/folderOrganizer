@@ -1,4 +1,4 @@
-# This script uses powershell to identify type of files in a folder and move them to respective folders.
+# This script uses PowerShell to identify the type of files in a folder and move them to respective folders.
 
 # Get the path of the folder to organize
 $folderPath = Read-Host "Enter the path of the folder to organize"
@@ -18,8 +18,7 @@ else {
     cd $folderPath
 }
 
-# Create folders for different file
-
+# Create folders for different file types
 $folders = @("Images", "Documents", "Music", "Videos", "Others")
 foreach ($folder in $folders) {
     $tempFolderPath = Join-Path $folderPath $folder
@@ -28,14 +27,14 @@ foreach ($folder in $folders) {
     }
 }
 
-# Get all files in the folder
-$files = Get-ChildItem $folderPath
+# Get all files in the folder, excluding directories
+$files = Get-ChildItem $folderPath -File
 
 # Move files to respective folders
 foreach ($file in $files) {
     $extension = $file.Extension
     switch ($extension) {
-       {$extension -in $imageExtensions} {
+        {$extension -in $imageExtensions} {
             Move-Item -Path $file.FullName -Destination (Join-Path $folderPath "Images")
         }
         {$extension -in $documentExtensions} {
