@@ -14,20 +14,22 @@ if (-not (Test-Path $folderPath)) {
     Write-Host "Folder does not exist"
     exit
 }
+else {
+    cd $folderPath
+}
 
-# Create folders for different file types
+# Create folders for different file
 
 $folders = @("Images", "Documents", "Music", "Videos", "Others")
-
 foreach ($folder in $folders) {
-    $folderPath = Join-Path $folderPath $folder
-    if (-not (Test-Path $folderPath)) {
-        New-Item -Path $folderPath -ItemType Directory
+    $tempFolderPath = Join-Path $folderPath $folder
+    if (-not (Test-Path $tempFolderPath)) {
+        New-Item -Path $tempFolderPath -ItemType Directory
     }
 }
 
 # Get all files in the folder
-$files = Get-ChildItem $folderPath
+$files = Get-ChildItem $folderPath -File
 
 # Move files to respective folders
 foreach ($file in $files) {
