@@ -12,10 +12,10 @@ $videoExtensions = @(".mp4", ".avi", ".mkv")
 # Check if the folder exists
 if (-not (Test-Path $folderPath)) {
     Write-Host "Folder does not exist"
-    exit
+    return
 }
 else {
-    cd $folderPath
+    Write-Host "Folder exists! Executing the next steps..."
 }
 
 # Create folders for different file
